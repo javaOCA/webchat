@@ -1,5 +1,7 @@
 package ua.univerpulse.webchat.mvc.domain;
 
+import ua.univerpulse.webchat.mvc.dto.ChatUserDto;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -36,9 +38,7 @@ public class ChatUser {
         this.receiveMessages = receiveMessages;
     }
 
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
 
     public void setId(Long id) {
         this.id = id;
@@ -74,5 +74,24 @@ public class ChatUser {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public static class Builder{
+        ChatUser chatUser = new ChatUser();
+        public Builder setName(ChatUserDto userDto){
+            chatUser.setName(userDto.getName());
+            return this;
+        }
+        public Builder setLogin(ChatUserDto userDto){
+            chatUser.setLogin(userDto.getLogin());
+            return this;
+        }
+        public Builder setPassword(ChatUserDto userDto){
+            chatUser.setPassword(userDto.getPassword());
+            return this;
+        }
+        public ChatUser build(){
+            return chatUser;
+        }
     }
 }
