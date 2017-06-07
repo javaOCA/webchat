@@ -90,6 +90,10 @@ public class ChatUser {
             chatUser.setPassword(userDto.getPassword());
             return this;
         }
+        public Builder setRole(Role role) {
+            chatUser.setRole(role);
+            return this;
+        }
         public ChatUser build(){
             return chatUser;
         }

@@ -7,4 +7,6 @@ import ua.univerpulse.webchat.mvc.domain.ChatUser;
 @Repository
 public interface ChatUserRepository extends JpaRepository<ChatUser, Long>, ChatUserRepositoryCustom {
 
+    public ChatUser findChatUserByLogin(String login);
+
 }

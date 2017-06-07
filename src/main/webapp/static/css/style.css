@@ -45,3 +45,9 @@ h1 {
     margin-left: 120px;
     color: #8B0000;
 }
+
+.form-error {
+    width: 416px;
+    margin: auto;
+    color: #8B0000;
+}

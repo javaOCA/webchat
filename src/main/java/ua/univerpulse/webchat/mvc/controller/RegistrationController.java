@@ -32,10 +32,11 @@ public class RegistrationController {
         return "registration";
     }
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public String saveUser(@ModelAttribute("user") @Valid ChatUserDto userDto, BindingResult result, RedirectAttributes attributes) {
+    public String saveUser(@ModelAttribute("user") @Valid ChatUserDto userDto,
+                           BindingResult result, RedirectAttributes attributes) {
         if(result.hasErrors()) {
-            List<String> errors = result.getAllErrors().stream().map(err -> err.toString()).collect(Collectors.toList());
-            attributes.addFlashAttribute("error", errors);
+//            List<String> errors = result.getAllErrors().stream().map(err -> err.toString()).collect(Collectors.toList());
+//            attributes.addFlashAttribute("error", errors);
             attributes.addFlashAttribute("org.springframework.validation.BindingResult.user", result);
             userDto.setPassword("");
             attributes.addFlashAttribute("user", userDto);
