@@ -1,6 +1,8 @@
 package ua.univerpulse.webchat.mvc.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -20,6 +22,8 @@ import java.util.Objects;
 public class LoginController {
 
     private final LoginService loginService;
+    @Autowired
+    private MessageSource messageSource;
     @Autowired
     public LoginController(LoginService loginService) {
         this.loginService = loginService;
@@ -49,7 +53,7 @@ public class LoginController {
             session.setAttribute("user", chatUser);
             return "redirect:/admin";
         }
-        attributes.addFlashAttribute("error", "login.incorrect");
-        return "redirect:/";
+        attributes.addFlashAttribute("error", messageSource.getMessage("login.incorrect", null, LocaleContextHolder.getLocale()));
+        return "redirect:/login";
     }
 }

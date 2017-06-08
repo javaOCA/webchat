@@ -51,3 +51,8 @@ h1 {
     margin: auto;
     color: #8B0000;
 }
+
+.a-reg {
+    float: right;
+    color: blue;
+}

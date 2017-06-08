@@ -31,6 +31,7 @@
         <hr>
         <div class="form-row">
             <button type="submit" class="btn_submit"><s:message code="auth.submit"/></button>
+            <a href="./registration" class="a-reg"><s:message code="auth.title"></s:message></a>
         </div>
     </sf:form>
     <div class="form-error">${error}</div>

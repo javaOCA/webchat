@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Chat page</title>
+    <link rel="stylesheet" media="screen" href="./static/css/chat.css"/>
     <script src="http://cdn.jsdelivr.net/sockjs/0.3.4/sockjs.min.js"></script>
     <script>
         var socket = new SockJS("${sockUrl}");
@@ -88,6 +89,30 @@
     </script>
 </head>
 <body>
+    <div id="wrapper">
+        <div id="header">
+            <h2>Welcome to chat</h2>
+        </div>
+    </div>
+    <div id="main">
+        <form>
+            <textarea id="inputMessage"></textarea>
+        </form>
+    </div>
+    <div id="activeUsers">
+
+    </div>
+    <div id="footer">
+        <form>
+            <input type="text" id="outputMessage"/>
+        </form>
+        <form>
+            <input type="button" id="sendButton" value="Send"/>
+            <input type="button" id="broadcastButton" value="Broadcast"/>
+            <input type="button" id="logoutButton" value="Logout"/>
+        </form>
+    </div>
+<!--
     <h1>Welcome to chat!</h1>
     <table border="1">
         <tr>
@@ -116,5 +141,6 @@
             </td>
         </tr>
     </table>
+-->
 </body>
 </html>
