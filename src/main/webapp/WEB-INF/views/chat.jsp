@@ -5,10 +5,13 @@
     <link rel="stylesheet" media="screen" href="./static/css/chat.css"/>
     <script src="http://cdn.jsdelivr.net/sockjs/0.3.4/sockjs.min.js"></script>
     <script>
+        function ready() {
+            document.getElementById("sendButton").addEventListener("click", send);
+            document.getElementById("broadcastButton").addEventListener("click", broadcast);
+            document.getElementById("logoutButton").addEventListener("click", logout);
+        }
+        document.addEventListener("DOMContentLoaded", ready);
         var socket = new SockJS("${sockUrl}");
-        document.getElementById("sendButton").addEventListener("click", send);
-        document.getElementById("broadcastButton").addEventListener("click", broadcast);
-        document.getElementById("logoutButton").addEventListener("click", logout);
         socket.onopen = function () {
             console.log("Connection successfull!");
             registration();
@@ -112,35 +115,5 @@
             <input type="button" id="logoutButton" value="Logout"/>
         </form>
     </div>
-<!--
-    <h1>Welcome to chat!</h1>
-    <table border="1">
-        <tr>
-            <td>
-                <form>
-                    <textarea id="inputMessage"></textarea>
-                </form>
-            </td>
-            <td>
-                <div id="activeUsers">
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <form>
-                    <input type="text" id="outputMessage"/>
-                </form>
-            </td>
-            <td>
-                <form>
-                    <input type="button" id="sendButton" value="Send"/>
-                    <input type="button" id="broadcastButton" value="Broadcast"/>
-                    <input type="button" id="logoutButton" value="Logout"/>
-                </form>
-            </td>
-        </tr>
-    </table>
--->
 </body>
 </html>

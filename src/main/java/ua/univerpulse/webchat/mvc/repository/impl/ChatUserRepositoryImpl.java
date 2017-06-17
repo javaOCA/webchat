@@ -36,5 +36,4 @@ public class ChatUserRepositoryImpl implements ChatUserRepositoryCustom {
             }
         }
     }
-
 }
