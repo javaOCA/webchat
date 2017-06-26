@@ -8,33 +8,34 @@
         function ready() {
             document.getElementById("sendButton").addEventListener("click", send);
             document.getElementById("broadcastButton").addEventListener("click", broadcast);
+            document.getElementById("resetButton").addEventListener("click", reset);
             document.getElementById("logoutButton").addEventListener("click", logout);
         }
         document.addEventListener("DOMContentLoaded", ready);
         var socket = new SockJS("${sockUrl}");
         socket.onopen = function () {
-            console.log("Connection successfull!");
+            console.log("Connection successful!");
             registration();
-        }
+        };
         socket.onclose = function (event) {
-            if(event.wasClean) {
+            if (event.wasClean) {
                 console.log("Connection close!");
             } else {
-                console.log("Connection close because of error!");
+                console.log("Connection closed because of error!");
             }
-            window.location.href="/";
-        }
+//            window.location.href = "/";
+        };
         socket.onerror = function (error) {
-            console.log(error);
-            window.location.href="/";
-        }
+            console.log("error");
+//            window.location.href = "/";
+        };
         socket.onmessage = function (event) {
             var json_message = JSON.parse(event.data);
-            if (typeof  json_message.auth === 'undefined') {
+            if (typeof json_message.auth === "undefined") {
                 console.log("Bad JSON");
-                window.location.href="/";
+//                window.location.href = "/";
             }
-            if (json_message.auth == "yes" && typeof json_message.list !== 'undefined') {
+            if (json_message.auth == "yes" && typeof json_message.list !== "undefined") {
                 var array_active_users = json_message.list;
                 var ul_element = document.createElement("ul");
                 for (var i = 0; i < array_active_users.length; i++) {
@@ -46,15 +47,23 @@
                     ul_element.appendChild(li_element);
                 }
                 var div_element = document.getElementById("activeUsers");
-                div_element.innerHTML = "";
+                div_element.innerHTML="";
                 div_element.appendChild(ul_element);
             }
-            if (json_message.auth == "yes" && typeof json_message.login !== 'undefined') {
+            if (json_message.auth == "yes" && typeof json_message.login !== "undefined") {
                 var output = json_message.login + ": " + json_message.message;
-                document.getElementById("inputMessage").value += output + "\n";
+                document.getElementById("inputMessage").value += output +"\n";
             }
-        }
-        function registration() { // send id session
+            //TODO "name":"..."; "message":"..."
+
+            if(json_message.auth == "yes" && typeof json_message.name !== "undefined"
+                && typeof json_message.message!=="undefined"){
+                var output = json_message.name+ ": " + json_message.message;
+                document.getElementById("inputMessage").value += output+"\n";
+            }
+
+        };
+        function registration() {
             var sessionid = getCookie("JSESSIONID");
             var answer = {};
             answer["sessionid"] = sessionid;
@@ -68,10 +77,11 @@
         }
         function addUser(event) {
             var login = event.currentTarget.id;
-            document.getElementById("outputMessage").value = login + ": ";
+            document.getElementById("outputMessage").value = login + ":";
         }
         function send() {
             var array_message = document.getElementById("outputMessage").value.split(":");
+            reset();
             var answer = {};
             answer["login"] = array_message[0];
             answer["message"] = array_message[1];
@@ -80,26 +90,29 @@
         function broadcast() {
             var message = document.getElementById("outputMessage").value;
             var answer = {};
-            answer["broadcast"] = array_message[0];
+            answer["broadcast"] = message;
             socket.send(JSON.stringify(answer));
+        }
+        function reset() {
+            document.getElementById("outputMessage").value = "";
         }
         function logout() {
             var answer = {};
-            answer["logout"]="";
-            socket.send(JSON.stringify(answer))
-            window.location.href="/";
+            answer["logout"] = "";
+            socket.send(JSON.stringify(answer));
+            window.location.href = "/";
         }
     </script>
 </head>
 <body>
     <div id="wrapper">
         <div id="header">
-            <h2>Welcome to chat</h2>
+            <h2>Welcome&nbsp;${user.name}&nbsp;in our chat!</h2>
         </div>
     </div>
     <div id="main">
         <form>
-            <textarea id="inputMessage"></textarea>
+            <textarea id="inputMessage" readonly></textarea>
         </form>
     </div>
     <div id="activeUsers">
@@ -112,6 +125,7 @@
         <form>
             <input type="button" id="sendButton" value="Send"/>
             <input type="button" id="broadcastButton" value="Broadcast"/>
+            <input type="button" id="resetButton" value="Clear"/>
             <input type="button" id="logoutButton" value="Logout"/>
         </form>
     </div>

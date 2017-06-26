@@ -41,7 +41,6 @@ public class WebSocketServiceImpl implements WebSocketService {
         Map<String, String> mapMessages = messages.stream()
                 .collect(Collectors.toMap(message -> message.getSender().getLogin(),
                         message -> message.getBody()));
-
         return mapMessages;
     }
 

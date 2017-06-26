@@ -18,7 +18,7 @@ import java.util.Locale;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan("ua.univerpulse.webchat.mvc")
+@ComponentScan("ua.univerpulse.webchat.mvc.*")
 public class AppConfig extends WebMvcConfigurerAdapter {
 
     @Override

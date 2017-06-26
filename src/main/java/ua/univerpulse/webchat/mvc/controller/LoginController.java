@@ -15,6 +15,9 @@ import ua.univerpulse.webchat.mvc.domain.RoleEnum;
 import ua.univerpulse.webchat.mvc.dto.ChatUserDto;
 import ua.univerpulse.webchat.mvc.service.LoginService;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Objects;
 
@@ -43,10 +46,13 @@ public class LoginController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String verifyLogin(@ModelAttribute("user") ChatUserDto userDto,
                               HttpSession session,
+                              HttpServletRequest request,
+                              HttpServletResponse response,
                               RedirectAttributes attributes) {
         ChatUser chatUser = loginService.verifyLogin(userDto.getLogin(), userDto.getPassword());
         if (Objects.nonNull(chatUser) && chatUser.getRole().getRole() == RoleEnum.USER) {
             session.setAttribute("user", chatUser);
+            dropHttpOnlyFlag(session.getId(), request, response);
             return "redirect:/chat";
         }
         if (Objects.nonNull(chatUser) && chatUser.getRole().getRole() == RoleEnum.ADMIN) {
@@ -55,5 +61,15 @@ public class LoginController {
         }
         attributes.addFlashAttribute("error", messageSource.getMessage("login.incorrect", null, LocaleContextHolder.getLocale()));
         return "redirect:/login";
+    }
+
+    public void dropHttpOnlyFlag(String sessionId, HttpServletRequest request, HttpServletResponse response) {
+        Cookie[] cookies = request.getCookies();
+        for (Cookie cookie: cookies) {
+            if(cookie.getName().equals("JSESSIONID")){
+                cookie.setHttpOnly(false);
+                response.addCookie(cookie);
+            }
+        }
     }
 }

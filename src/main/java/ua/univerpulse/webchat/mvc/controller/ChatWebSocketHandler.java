@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.Set;
 
 /*
-        Client ot Server
+        Client to Server
             {"sessionid":"smth"}
             {"broadcast":"Hello"}
             {"login":"vasya", "message":"Hi"}
@@ -52,19 +52,18 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         Type gsonType = new TypeToken<HashMap<String, String>>(){}.getType();
         //формуємо map з json
         Map<String, String> stringMap = gson.fromJson(jsonMessage, gsonType);
-        System.out.println(stringMap);
         //if true - user хочет стать online
         if (Objects.nonNull(stringMap.get("sessionid"))) {
             ///регистрируем online
             if (registration(stringMap.get("sessionid"), socketSession)) {
                 //registrated online
-                socketSession.sendMessage(new TextMessage("{'auth':'yes'}"));
+                socketSession.sendMessage(new TextMessage("{\"auth\":\"yes\"}"));
                 ///сказать всем юзерам что online
                 sendListAllUsers();
                 sendAllMessageForUser(socketSession);
             } else {
                 //если нету в httpSession юзера с sessionId
-                socketSession.sendMessage(new TextMessage("{'auth':'no'}"));
+                socketSession.sendMessage(new TextMessage("{\"auth\":\"no\"}"));
             }
         } else {
             //1. кто то хочет в обход системи послать json
@@ -80,7 +79,8 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
                     ///формируем json ответа
                     JsonObject broadcastJson = new JsonObject();
                     broadcastJson.addProperty("auth","yes");
-                    broadcastJson.addProperty(senderLogin, broadcastMessage);
+                    broadcastJson.addProperty("name", senderLogin);
+                    broadcastJson.addProperty("message", broadcastMessage);
                     ///отсилает сообщ. всем активним пользователям
                     sendAllActiveUsers(broadcastJson);
                 } else if (Objects.nonNull(stringMap.get("login"))) { //приватные сообщения если ключ login
@@ -102,14 +102,13 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
                     socketSession.sendMessage(new TextMessage("bad json"));
                 }
             } else {
-                socketSession.sendMessage(new TextMessage("{'auth':'no'}"));
+                socketSession.sendMessage(new TextMessage("{\"auth\":\"no\"}"));
             }
         }
     }
 
     private boolean registration(String sessionId, WebSocketSession socketSession) {
         ///по sessionID получить session, проверить, а потом добавиться socketSession в map
-
         HttpSession httpSession = HttpSessionCreationListener.getSessionById(sessionId);
         ///проверям пользователя на что он залогинен
         if (Objects.nonNull(httpSession.getAttribute("user"))) {
@@ -119,7 +118,6 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
             httpSessionLoginMap.put(login, sessionId);
             return true;
         }
-
         return false;
     }
 
