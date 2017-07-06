@@ -59,12 +59,12 @@ input[type="text"] {
     height: 24px;
     width: 600px;
     margin-left: 20px;
-    color: #cccccc;
+    color: #000000;
     font-size: 14px;
     font-family: Tahoma;
 }
 input[type="text"]:focus {
-    color: #000000;
+    color: #0000cc;
     border: 1px solid #000000
 }
 input[type="button"] {

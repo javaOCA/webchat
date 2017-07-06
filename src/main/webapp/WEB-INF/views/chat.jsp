@@ -81,7 +81,6 @@
         }
         function send() {
             var array_message = document.getElementById("outputMessage").value.split(":");
-            reset();
             var answer = {};
             answer["login"] = array_message[0];
             answer["message"] = array_message[1];
