@@ -58,6 +58,7 @@ public class LoginController {
         if (Objects.nonNull(chatUser) && chatUser.getRole().getRole() == RoleEnum.ADMIN) {
             session.setAttribute("user", chatUser);
             return "redirect:/admin";
+            //TODO user isBan
         }
         attributes.addFlashAttribute("error", messageSource.getMessage("login.incorrect", null, LocaleContextHolder.getLocale()));
         return "redirect:/login";

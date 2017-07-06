@@ -33,25 +33,18 @@ public class WebSocketServiceImpl implements WebSocketService {
     public void saveBroadcastMessage(String broadcastMessage, String senderLogin) {
         String value = senderLogin + ":" + broadcastMessage;
         redisDao.saveDataByKey("broadcast", value);
-//        System.out.println("AFTER SAVE BROADCAST MESSAGE");
     }
 
     @Override
     @Transactional
     public List<Pair<String,String>> getMessagesByLogin(String receiverLogin) {
         List<Message> messages = messageRepository.findMessagesByLogin(receiverLogin);
-        System.out.println("IN SERVICE " + messages.size());
-//        Map<String, String> mapMessages = messages.stream()
-//                .collect(Collectors.toMap(message -> message.getSender().getLogin(),
-//                        message -> message.getBody()
-//                ));
         List<Pair<String,String>> mapMessages = new ArrayList<>();
         for (Message message: messages){
             System.out.println(message.getSender());
             mapMessages.add(
                     new Pair<String, String>(message.getSender().getLogin(),message.getBody()));
         }
-        System.out.println("END MESSAGES, MAP SIZE: " + mapMessages.size());
         return mapMessages;
     }
 
