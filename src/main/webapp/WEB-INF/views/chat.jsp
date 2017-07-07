@@ -8,7 +8,7 @@
         function ready() {
             document.getElementById("sendButton").addEventListener("click", send);
             document.getElementById("broadcastButton").addEventListener("click", broadcast);
-            document.getElementById("resetButton").addEventListener("click", reset);
+            document.getElementById("resetButton").addEventListener("click", cleartext);
             document.getElementById("logoutButton").addEventListener("click", logout);
         }
         document.addEventListener("DOMContentLoaded", ready);
@@ -92,7 +92,7 @@
             answer["broadcast"] = message;
             socket.send(JSON.stringify(answer));
         }
-        function reset() {
+        function cleartext() {
             document.getElementById("outputMessage").value = "";
         }
         function logout() {

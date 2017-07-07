@@ -1,5 +1,6 @@
 package ua.univerpulse.webchat.mvc.domain;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import ua.univerpulse.webchat.mvc.dto.ChatUserDto;
 
 import javax.persistence.*;
@@ -87,7 +88,8 @@ public class ChatUser {
             return this;
         }
         public Builder setPassword(ChatUserDto userDto){
-            chatUser.setPassword(userDto.getPassword());
+//            chatUser.setPassword(userDto.getPassword());
+            chatUser.setPassword(DigestUtils.md5Hex(userDto.getPassword() + userDto.getLogin()));
             return this;
         }
         public Builder setRole(Role role) {

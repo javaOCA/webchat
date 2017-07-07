@@ -218,6 +218,12 @@
       <version>${hb.manager}</version>
     </dependency>
 
+    <dependency>
+      <groupId>commons-codec</groupId>
+      <artifactId>commons-codec</artifactId>
+      <version>1.10</version>
+    </dependency>
+
   </dependencies>
 
   <build>

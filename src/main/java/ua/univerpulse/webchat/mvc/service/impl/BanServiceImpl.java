@@ -23,7 +23,6 @@ public class BanServiceImpl implements BanService {
 
     private BansRepository bansRepository;
     private ChatUserRepository chatUserRepository;
-
     private MessageSource messageSource;
 
     @Autowired

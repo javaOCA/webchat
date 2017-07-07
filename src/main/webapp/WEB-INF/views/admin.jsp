@@ -2,6 +2,8 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <html>
 <head>
+    <title>Administration page</title>
+    <link rel="stylesheet" media="screen" href="./static/css/admin.css"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script>
 
@@ -20,15 +22,15 @@
 
         function getUsers(){
             $.ajax({
-                type:'GET',
+                type: 'GET',
                 contentType: 'application/json',
-                url:'${usersUrl}',
-                dataType:'json',
-                success:function (data,textStatus,jqXHR){
+                url: '${usersUrl}',
+                dataType: 'json',
+                success: function (data, textStatus, jqXHR){
                     var userList = data.users;
                     var formTag = document.createElement("form");
                     var ulTag = document.createElement("ul");
-                    for(var i=0;i<userList.length;i++){
+                    for(var i=0; i<userList.length; i++){
                         var liTag = document.createElement("li");
                         liTag.innerText=userList[i].login;
                         var inputTag = document.createElement("input");
@@ -36,7 +38,7 @@
                         inputTag.value=userList[i].links[0].rel;
                         inputTag.name = userList[i].links[0].href;
                         inputTag.id = userList[i].login;
-                        inputTag.addEventListener("click",userBan);
+                        inputTag.addEventListener("click", userBan);
                         liTag.appendChild(inputTag);
                         ulTag.appendChild(liTag);
                     }
@@ -46,26 +48,25 @@
                 }
             });
         }
-
         function userBan (event) {
             var rel = event.currentTarget.value;
             var href = event.currentTarget.name;
             var login = event.currentTarget.id;
-            if(rel=="add"){
+            if(rel == "add"){
                 $.ajax({
-                    type:'POST',
+                    type: 'POST',
                     contentType: 'application/json',
-                    url:href,
-                    data:JSON.stringify({"login":login,}),
+                    url: href,
+                    data: JSON.stringify({"login":login,}),
                     success: function(data,textStatus,jqXHR){
                         getUsers();
                     }
                 });
-            }else {
+            } else {
                 $.ajax({
-                    type:'DELETE',
+                    type: 'DELETE',
                     contentType: 'application/json',
-                    url:href,
+                    url: href,
                     success: function(data,textStatus,jqXHR){
                         getUsers();
                     }
@@ -73,14 +74,30 @@
             }
         }
         window.onload=function () {
-            getUsers();
+            var ul_element = document.createElement("ul");
+            var li_element_ban = document.createElement("li");
+            li_element_ban.innerText = "Ban users";
+            li_element_ban.addEventListener("click", getUsers);
+            ul_element.appendChild(li_element_ban);
+            var li_element_exit = document.createElement("li");
+            li_element_exit.innerText = "Exit";
+            li_element_exit.addEventListener("click", function () {
+                window.location.href = "/";
+            })
+            ul_element.appendChild(li_element_exit);
+            var div_element = document.getElementById("left");
+            div_element.appendChild(ul_element);
         }
     </script>
 </head>
 <body>
-    <h1>Welcome to admin page!</h1>
-    <br><a href="/">Logout -></a><br>
-    <div id="users">
+    <div id="wrapper">
+        <div id="header">
+            <h2>Welcome&nbsp;${user.name}&nbsp;in administration page!</h2>
+        </div>
+        <div id="left"></div>
+        <div id="users"></div>
+        <div id="footer"></div>
     </div>
 </body>
 </html>

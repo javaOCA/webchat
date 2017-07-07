@@ -1,5 +1,6 @@
 package ua.univerpulse.webchat.mvc.service.impl;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.univerpulse.webchat.mvc.domain.ChatUser;
@@ -44,7 +45,10 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public ChatUser verifyLogin(String login, String password) {
         ChatUser user = chatUserRepository.findChatUserByLogin(login);
-        if (Objects.nonNull(user) && user.getPassword().equals(password)) return user;
+//        if (Objects.nonNull(user) && user.getPassword().equals(password)) return user;
+        if (Objects.nonNull(user) && user.getPassword().equals(DigestUtils.md5Hex(password + login))) {
+            return user;
+        }
         return null;
     }
 

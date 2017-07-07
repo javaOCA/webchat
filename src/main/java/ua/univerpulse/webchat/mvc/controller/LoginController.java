@@ -12,7 +12,9 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ua.univerpulse.webchat.mvc.domain.ChatUser;
 import ua.univerpulse.webchat.mvc.domain.RoleEnum;
+import ua.univerpulse.webchat.mvc.dto.BanUserDto;
 import ua.univerpulse.webchat.mvc.dto.ChatUserDto;
+import ua.univerpulse.webchat.mvc.service.BanService;
 import ua.univerpulse.webchat.mvc.service.LoginService;
 
 import javax.servlet.http.Cookie;
@@ -25,11 +27,13 @@ import java.util.Objects;
 public class LoginController {
 
     private final LoginService loginService;
+    private final BanService banService;
     @Autowired
     private MessageSource messageSource;
     @Autowired
-    public LoginController(LoginService loginService) {
+    public LoginController(LoginService loginService, BanService banService) {
         this.loginService = loginService;
+        this.banService = banService;
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET, name = "loginUser")
@@ -52,13 +56,19 @@ public class LoginController {
         ChatUser chatUser = loginService.verifyLogin(userDto.getLogin(), userDto.getPassword());
         if (Objects.nonNull(chatUser) && chatUser.getRole().getRole() == RoleEnum.USER) {
             session.setAttribute("user", chatUser);
+            BanUserDto banUserDto = new BanUserDto();
+            banUserDto.setLogin(chatUser.getLogin());
             dropHttpOnlyFlag(session.getId(), request, response);
-            return "redirect:/chat";
+            if (banService.isUserBaned(banUserDto)) {
+                attributes.addFlashAttribute("error", messageSource.getMessage("user.ban", null, LocaleContextHolder.getLocale()));
+                return "redirect:/login";
+            } else {
+                return "redirect:/chat";
+            }
         }
         if (Objects.nonNull(chatUser) && chatUser.getRole().getRole() == RoleEnum.ADMIN) {
             session.setAttribute("user", chatUser);
             return "redirect:/admin";
-            //TODO user isBan
         }
         attributes.addFlashAttribute("error", messageSource.getMessage("login.incorrect", null, LocaleContextHolder.getLocale()));
         return "redirect:/login";

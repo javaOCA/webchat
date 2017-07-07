@@ -89,7 +89,7 @@ public class AdminController {
             responseDto.setAuth("yes");
             List<BanUserDto> banUserDtos = new ArrayList<>();
             List<ChatUserDto> chatUserDtos = banService.getAllUsersExceptAdmin();
-            for (ChatUserDto chatUserDto : chatUserDtos) {
+            for (ChatUserDto chatUserDto: chatUserDtos) {
                 BanUserDto banUserDto = new BanUserDto();
                 banUserDto.setLogin(chatUserDto.getLogin());
                 if (banService.isUserBaned(banUserDto)) {
