@@ -24,7 +24,7 @@ public class WebAppInitializer implements WebApplicationInitializer {
 
     private AnnotationConfigWebApplicationContext getContext() {
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
-        context.setConfigLocation("ua/univerpulse/webchat/config"); // classes with annotation @Configuration (analog web.xml)
+        context.setConfigLocation("ua.univerpulse.webchat.config");
         return context;
     }
 }

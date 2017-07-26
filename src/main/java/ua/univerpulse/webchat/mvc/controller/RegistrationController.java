@@ -1,19 +1,16 @@
 package ua.univerpulse.webchat.mvc.controller;
 
+import org.springframework.ui.Model;
 import ua.univerpulse.webchat.mvc.dto.ChatUserDto;
-import ua.univerpulse.webchat.mvc.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.List;
-import java.util.stream.Collectors;
+import ua.univerpulse.webchat.mvc.service.LoginService;
+import javax.validation.Valid;
 
 @Controller
 public class RegistrationController {
@@ -25,18 +22,19 @@ public class RegistrationController {
     }
 
     @RequestMapping(value = "/registration", method = RequestMethod.GET, name = "registrationUser")
-    public ModelAndView registrationUser(@ModelAttribute("user") ChatUserDto userDto) {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("registrationHandler", "registration");
-        modelAndView.setViewName("registration");
-        return modelAndView;
+    public String registrationUser(Model model) {
+        if (!model.containsAttribute("user")) {
+            model.addAttribute("user", new ChatUserDto());
+        }
+        return "registration";
     }
-
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public String saveUser(@ModelAttribute("user") @Validated ChatUserDto userDto, BindingResult result, RedirectAttributes attributes) {
+    public String saveUser(@ModelAttribute("user") @Valid ChatUserDto userDto,
+                           BindingResult result, RedirectAttributes attributes) {
         if(result.hasErrors()) {
-            List<String> errors = result.getAllErrors().stream().map(err -> err.toString()).collect(Collectors.toList());
-            attributes.addFlashAttribute("error", errors);
+//            List<String> errors = result.getAllErrors().stream().map(err -> err.toString()).collect(Collectors.toList());
+//            attributes.addFlashAttribute("error", errors);
+            attributes.addFlashAttribute("org.springframework.validation.BindingResult.user", result);
             userDto.setPassword("");
             attributes.addFlashAttribute("user", userDto);
             return "redirect:/registration";
@@ -44,4 +42,5 @@ public class RegistrationController {
         loginService.save(userDto);
         return "redirect:/";
     }
+
 }
