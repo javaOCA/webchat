@@ -62,7 +62,8 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
                     socketService.saveBroadcastMessage(broadcastMessage,senderLogin);
                     JsonObject broadcastJson = new JsonObject();
                     broadcastJson.addProperty("auth","yes");
-                    broadcastJson.addProperty("name", senderLogin);
+                    broadcastJson.addProperty("login", senderLogin);
+//                    broadcastJson.addProperty("name", senderLogin);
                     broadcastJson.addProperty("message",broadcastMessage);
                     sendAllActiveUsers(broadcastJson);
                 } else if (Objects.nonNull(stringMap.get("login"))) {
